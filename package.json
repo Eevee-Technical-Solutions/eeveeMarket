@@ -8,7 +8,7 @@
     "convert": "tsc -p ./",
     "build": "webpack",
     "dev": "concurrently \"node server/server.ts\" \"webpack serve --open\"",
-    "dev2": "tsnd --inspect -- server/index.ts"
+    "dev2": "tsnd --inspect -- server/server.ts"
   },
   "keywords": [],
   "author": "",
