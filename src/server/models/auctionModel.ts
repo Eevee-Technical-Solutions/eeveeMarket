@@ -7,11 +7,14 @@ const pool = new Pool({
   connectionString: URI
 });
 
-
-module.exports = {
+export const database = {
   query: (text: string, params: string[], callback: any) => {
     console.log('executed query', text);
     return pool.query(text, params, callback);
   },
 };
+
+export function query(searchQuery: string, params?: any[], calllback?: any) {
+  throw new Error('Function not implemented.');
+}
   
