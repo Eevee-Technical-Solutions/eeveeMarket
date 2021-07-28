@@ -14,7 +14,7 @@ export const database = {
   },
 };
 
-export function query(searchQuery: string, params?: any[], calllback?: any) {
+export function query(searchQuery: string, params?: any[], calllback?: any)  : any {
   throw new Error('Function not implemented.');
 }
   
