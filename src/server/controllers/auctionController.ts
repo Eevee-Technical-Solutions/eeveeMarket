@@ -23,28 +23,55 @@ export class auctionController {
 
     }
 
-    static bidItem : RequestHandler = (req, res, next) => {
+    static bidItem : RequestHandler = async (req, res, next) => {
         // {bid : 320, user: "rob", cookie" : ""}
-        const { bid, user, itemName } = req.body
+      const { bid, user, itemName } = req.body
+      //We need to user and itemName
+      const searchQuery = `SELECT * FROM "bids" a 
+        INNER JOIN "user" b ON a."userId" = b."userId" 
+        INNER JOIN "item" c ON a."itemId" = c."itemId" 
+        WHERE c."name" = $1 AND b."userName" = $2`
 
-        // get user id
-        // get itemid
-        //SELECT "user"."userId","bids"."itemId" FROM "public"."bids" INNER JOIN "public"."user" ON "bids"."userId" = "user"."userId" WHERE "user"."userName" = 'player1'
+      try {
+        const results = await db.query(searchQuery, [itemName, user])
+        
+        
+        const itemId : number = results.rows[0].itemId
+        const userId : number = results.rows[0].userId
 
-        // grab values from result.rows and assign to user IF and item Id
-
-        // make updateBid 
-
+        const bidQuery = 'UPDATE bids SET bidPrice = $1 WHERE itemId = $2 AND userId =$3'
+        
+       await db.query(bidQuery, [bid, itemId, userId])
+        
+        return next()
+        
+      } catch (e) {
+        return next({"Err": `Error in quering for updating bid, ${e}`})
+      }       
+      
     }
 
-    static getWinner : RequestHandler = (req, res, next) => {
+    static getWinner : RequestHandler = async (req, res, next) => {
+            // {itemName: "name"}
 
+      const { itemName } = req.body;
 
-        // const markParms : number = results.rows[0]['itemId']
+      const searchQuery = `SELECT * FROM "item" a 
+      INNER JOIN "bids" b ON a."itemId" = b."itemId" 
+      INNER JOIN "user" c ON b."userId" = c."userId" 
+      WHERE a."name" = 'dog'
+      ORDER BY b."bidPrice" DESC LIMIT 1`
 
-        // const markQuery = 'UPDATE "item" SET "isComplete" = true WHERE "itemId" = $1'
+      try {
 
-        // await db.query(markQuery, [markParms])
+        const results = await db.query(searchQuery, [itemName])
+
+        res.locals.winner = results.rows
+        
+      } catch (e) {
+        return next({"Err": `Error in quering for getting Winner, ${e}`})
+      }
+
     }
 
 

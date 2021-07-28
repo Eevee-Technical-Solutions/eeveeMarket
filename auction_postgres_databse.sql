@@ -29,6 +29,8 @@ SET row_security = off;
 --   "itemId" BIGINT,
 --   "userId" BIGINT
 -- );
+-- SELECT * FROM "public"."bids" INNER JOIN "public"."user" ON "bids"."userId" = "user"."userId" INNER JOIN "user"."userId" ON "bids"."userId"
+
 
 -- INSERT INTO "item" ("itemId", "name", "description", "startingPrice","isComplete") VALUES (DEFAULT, 'cat', 'Very nice cat', 252, false);
 -- INSERT INTO "item" ("itemId", "name", "description", "startingPrice","isComplete") VALUES (DEFAULT, 'pokemon card', 'Eevee special edition', 25, false);
