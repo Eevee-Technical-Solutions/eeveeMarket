@@ -1,11 +1,28 @@
 import express from 'express';
 const path = require('path');
+const passport = require('passport');
+const auctionRouter = require("./routes/auctionRouter.ts");
 const app = express();
-
+const GitHubStrategy = require('passport-github').Strategy;
 
 //import route handles from routes
 
-const auctionRouter = require("./routes/auctionRouter.ts")
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new GitHubStrategy({
+  clientID: "601f5bf1853f34406920",
+  clientSecret: "257ac62d616e151dbe2251febf755ddf7e06d411",
+  callbackURL: "http://localhost:3000/auth/github/callback"
+},
+function(accessToken: any, refreshToken: any, profile: any, cb: any) {
+ //  User.findOrCreate({ githubId: profile.id }, function (err, user) {
+ //    return cb(err, user);
+ //  });
+ console.log(profile)
+ return cb(null, profile)
+}
+));
 
 /**
  * handling parsing request body
@@ -21,6 +38,15 @@ app.get('/', (req, res, next) => {
 
 app.use('/api', auctionRouter);
 
+app.get('/auth/github', passport.authenticate('github'));
+
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
 //default route handler
 app.use('*', (req, res, next) => {

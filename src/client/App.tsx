@@ -1,7 +1,13 @@
 import React, { FC, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
 import './app.scss';
-import Timer from "./containers/Timer";
-import Item from "./containers/Item";
+// import Timer from "./containers/Timer";
+// import Item from "./containers/Item";
+import {Login} from "./containers/Login";
 //move main into this
 
 import { makeStyles } from '@material-ui/core';
@@ -17,9 +23,17 @@ interface AppState {
 export const App = () : any => {
   return (
     <React.Fragment>
-    {/* <Timer /> */}
-    {/* <Item /> */}
-    <h1>hello world</h1>
+      <Router>
+          <Switch>
+            <Route path='/Login'>
+              <Login />
+            </Route>
+            <Route exact path='/'>
+              <h1>hello world</h1>
+              <a href="/auth/github">login with github</a>
+            </Route>
+          </Switch>
+        </Router>
     </React.Fragment>
   )
 }
